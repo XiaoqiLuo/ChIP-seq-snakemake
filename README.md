@@ -44,5 +44,6 @@ blacklist=/mnt/d/lxq/Training/reference \
 GATK=/mnt/d/lxq/Training/WES/GATK/gatk-4.1.7.0/gatk 
 ```
 ## result
-  
-  
+The pipeline generates 17 files for one sample, which ***call_peaks*** file is the result file needed for downstream analysis.
+File tree shown below:<br>
+![image](https://github.com/XiaoqiLuo/Chip-Seq-snakemake/blob/main/Chipseq-workspace.png)
