@@ -1,4 +1,4 @@
-# Chip-Seq-snakemake
+# ChIP-seq-snakemake
 
 ## Conda Enviornment
 ```
