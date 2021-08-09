@@ -19,8 +19,8 @@ cd /GATK/gatk-4.0.6.0
 wget http://mitra.stanford.edu/kundaje/akundaje/release/blacklists/hg19-human/wgEncodeHg19ConsensusSignalArtifactRegions.bed.gz
 ```
 
-# How To Execute
-## File Tree (fastq files are saved in rawfastq file)
+## How To Execute
+### File Tree (fastq files are saved in rawfastq file)
 >workspace<br>
 >>ChipSeq_snakemake.py<br>
 >>rawfastq<bc>
@@ -35,10 +35,14 @@ genomes=path-to-bwa-index \
 blacklist=path-to-blacklist-file \
 GATK=path-to-gatk 
 ```
-# example
+ 
+### example
 ```
 snakemake -s ChipSeq_snakemake.py -p -j 1 --config workspace=/mnt/d/lxq/Training/Chip-Seq \
 genomes=/mnt/d/lxq/Training/WES/GATK/hg38/bwa_index \
 blacklist=/mnt/d/lxq/Training/reference \
 GATK=/mnt/d/lxq/Training/WES/GATK/gatk-4.1.7.0/gatk 
 ```
+## result
+  
+  
