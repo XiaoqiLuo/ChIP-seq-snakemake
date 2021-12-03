@@ -72,7 +72,7 @@ rule clean_bam:
     input:
         config['workspace'] + '/mapped/{sample}_rmblacklist.bam
     shell:
-        'samtools view -b -F 1024 {input} > {output}'
+        'samtools view -b -F 1024 {input} > {output}' # read is PCR or optical duplicate
 
 rule callpeak:
     output:
