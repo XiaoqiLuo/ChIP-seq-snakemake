@@ -107,5 +107,3 @@ rule callpeak:
     shell:
         'macs2 callpeak -p 1e-5 --keep-dup all -B -n {params.name} -t {input} --outdir {params.resultdir}'
 
-
-# macs2 callpeak -p 1e-3 --keep-dup all -B -n SRR13242842 -t SRR13242842_output.bam --outdir ./call_peak
