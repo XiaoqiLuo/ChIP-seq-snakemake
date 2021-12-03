@@ -51,7 +51,7 @@ rule mapping:
 	shell:
 		'bwa mem {params.index} -v 1 -T 30 -h 5' # -v 1:output error -T 30:ignore score lower than 30;
 		'{input.fq1} {input.fq2} '
-		'| samblaster 2>dedup.log '
+		'| samblaster 2>{input.fq1}dedup.log '
 		'| samtools sort -o {output} -'
 
 
@@ -66,21 +66,11 @@ rule rmblacklist:
         'bedtools intersect -v -abam {input.bam} -b {params.blist} > {output}'
 
 
-#The output bam file was then filtered to remove unmapped reads and reads with Mapping Quality less than 5
-rule filter_unmap:
-    output:
-        config['workspace'] + '/mapped/{sample}_rmblacklist_intermediate.bam'
-    input:
-        config['workspace'] + '/mapped/{sample}_rmblacklist.bam'
-    shell:
-        'samtools view -b -F 4 -q 5 {input} > {output}'
-
-#The intermediate output bam file was then filtered to remove PCR or optical duplicate reads
-rule filter_PCR:
+rule clean_bam:
     output:
         config['workspace'] + '/mapped/{sample}_output.bam'
     input:
-        config['workspace'] + '/mapped/{sample}_rmblacklist_intermediate.bam'
+        config['workspace'] + '/mapped/{sample}_rmblacklist.bam
     shell:
         'samtools view -b -F 1024 {input} > {output}'
 
