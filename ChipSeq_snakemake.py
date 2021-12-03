@@ -35,7 +35,7 @@ rule quality:
 	shell:
 		'fastp -i {input.fq1} -I {input.fq2} '
 		'-o {output.fq1} -O {output.fq2} '
-		'-g -q 5 -u 50 -n 15 '
+		'-g -q 5 -u 50 -n 15 ' # -g:polyG trim; -q 5:quality value>5; -u 50:50% of bases are allowed to be unqualified
 		'-j {output.json} -h {output.html} 2>{log}'
 
 rule mapping:
@@ -49,9 +49,11 @@ rule mapping:
 	params:
 		index=config['genomes']+'/gatk_hg38', #genomes: D:\lxq\Training\WES\GATK\hg38\bwa_index
 	shell:
-		'bwa mem {params.index} -v 1 -T 30 -h 5'
+		'bwa mem {params.index} -v 1 -T 30 -h 5' # -v 1:output error -T 30:ignore score lower than 30;
 		'{input.fq1} {input.fq2} '
+		'| samblaster 2>dedup.log '
 		'| samtools sort -o {output} -'
+
 
 rule rmblacklist:
     output:
@@ -63,27 +65,13 @@ rule rmblacklist:
     shell:
         'bedtools intersect -v -abam {input.bam} -b {params.blist} > {output}'
 
-rule markdup:
-	output:
-		bam=config['workspace'] + '/mapped/{sample}_marked.bam',
-		metrics=config['workspace'] + '/mapped/{sample}_marked.metrics.txt'
-	input:
-		config['workspace'] + '/mapped/{sample}.bam'
-	log:
-		config['workspace'] + '/logs/{sample}_markdup.log'
-	params:
-		extra=r' "-Xmx2G -Djava.io.tmpdir=./" ',
-		GATK=config['GATK'] 
-	shell:
-		'{params.GATK} --java-options {params.extra} MarkDuplicates '
-		'-I {input} -O {output.bam} -M {output.metrics}'
 
 #The output bam file was then filtered to remove unmapped reads and reads with Mapping Quality less than 5
 rule filter_unmap:
     output:
-        config['workspace'] + '/mapped/{sample}_rmblacklist_marked_intermediate.bam'
+        config['workspace'] + '/mapped/{sample}_rmblacklist_intermediate.bam'
     input:
-        config['workspace'] + '/mapped/{sample}_rmblacklist_marked.bam'
+        config['workspace'] + '/mapped/{sample}_rmblacklist.bam'
     shell:
         'samtools view -b -F 4 -q 5 {input} > {output}'
 
@@ -92,7 +80,7 @@ rule filter_PCR:
     output:
         config['workspace'] + '/mapped/{sample}_output.bam'
     input:
-        config['workspace'] + '/mapped/{sample}_rmblacklist_marked_intermediate.bam'
+        config['workspace'] + '/mapped/{sample}_rmblacklist_intermediate.bam'
     shell:
         'samtools view -b -F 1024 {input} > {output}'
 
