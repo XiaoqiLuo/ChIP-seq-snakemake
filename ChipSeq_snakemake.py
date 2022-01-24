@@ -1,13 +1,12 @@
 ############################################################################################
 # 2021-08-02
 # Xiaoqi Luo
-# WES pipeline
+# ChIP pipeline
 ############################################################################################
 
 # snakemake -s ChipSeq_snakemake.py -p -j 1 --config workspace=/mnt/d/lxq/Training/Chip-Seq \
 # genomes=/mnt/d/lxq/Training/WES/GATK/hg38/bwa_index \
-# blacklist=/mnt/d/lxq/Training/reference \
-# GATK=/mnt/d/lxq/Training/WES/GATK/gatk-4.1.7.0/gatk 
+# blacklist=/mnt/d/lxq/Training/reference 
 
 files=os.listdir(config['workspace']+'/rawfastq/')
 SRR = []
